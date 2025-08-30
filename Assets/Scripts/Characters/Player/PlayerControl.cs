@@ -49,7 +49,6 @@ public class PlayerControl : MonoBehaviour
         {
             if (_mainCamera == null) _mainCamera = Camera.main;
             UseMouseInput();
-
             if (_isRunning && !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
             {
                 ResetSpeed();
@@ -102,8 +101,6 @@ public class PlayerControl : MonoBehaviour
                 ResetSpeed();
                 _isRunning = false;
             }
-
-
 
             Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;

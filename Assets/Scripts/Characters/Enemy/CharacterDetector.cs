@@ -16,6 +16,10 @@ public class CharacterDetector : MonoBehaviour
         {
             Debug.Log("Target in sight!");
         }
+        else 
+        {
+            Debug.Log("Target not in sight!");
+        }
 
     }
 
@@ -38,7 +42,7 @@ public class CharacterDetector : MonoBehaviour
         float distanceToTarget = Mathf.Sqrt(sqrdistanceToTarget);
         toTarget /= distanceToTarget;
 
-        if (Vector3.Dot(transform.forward, toTarget) < Mathf.Cos(_viewAngle * Mathf.Deg2Rad))
+        if (Vector3.Dot(_eyePosition.forward, toTarget) < Mathf.Cos(_viewAngle * Mathf.Deg2Rad))
             {
                 return false;
             }
