@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class CharacterDetector : MonoBehaviour
@@ -9,6 +10,13 @@ public class CharacterDetector : MonoBehaviour
     [SerializeField] private float _viewDistance = 10f;
     [SerializeField] Transform _eyePosition;
     [SerializeField] LayerMask _obstacleMask;
+
+    public float ViewAngle => _viewAngle;
+    public float ViewDistance => _viewDistance;
+
+    public LayerMask ObstacleMask => _obstacleMask;
+
+    public Transform EyePosition => _eyePosition;
 
     private void Update()
     {
