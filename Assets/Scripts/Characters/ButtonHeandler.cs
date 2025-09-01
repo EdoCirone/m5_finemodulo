@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ButtonHandler : MonoBehaviour, IAlarmed
@@ -9,8 +8,7 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
     [SerializeField] private float _openOffsetY;
     [SerializeField] private float _openDuration = 0.4f;
 
-
-    private Coroutine _opendoor;
+    private Coroutine _moveCo;
     private Vector3 _closePos;
     private Collider _collider;
     private bool _playerInside = false;
@@ -18,9 +16,7 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
 
     private void Awake()
     {
-
         _collider = GetComponent<Collider>();
-
     }
 
     private void Start()
@@ -30,16 +26,11 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
 
     void Update()
     {
-        if (_playerInside)
+        if (_playerInside && Input.GetKeyDown(KeyCode.F))
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                if (_isOpen) CloseDoor();
-                else OpenDoor();
-            }
-
+            if (_isOpen) CloseDoor();
+            else OpenDoor();
         }
-       ;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,14 +56,11 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
         _isOpen = true;
     }
 
-    private void ColseDoor()
+    private void CloseDoor()
     {
-
         StartMove(_closePos);
         _isOpen = false;
-
     }
-
 
     private void StartMove(Vector3 targetPos)
     {
@@ -86,7 +74,7 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / Mathf.Max(0.0001f, _moveDuration);
+            t += Time.deltaTime / Mathf.Max(0.0001f, _openDuration);
             _doorTransform.position = Vector3.Lerp(startPos, targetPos, t);
             yield return null;
         }
@@ -97,14 +85,12 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
     // ---- IAlarmed ----
     public void OnAlarmRaised()
     {
-        // chiudi la porta e disabilita l’interazione (il pulsante non funziona più)
         CloseDoor();
-        if (_col != null) _col.enabled = false;
+        if (_collider != null) _collider.enabled = false;
     }
 
     public void OnAlarmLowered()
     {
-        // riabilita l’interazione (non apre automaticamente)
-        if (_col != null) _col.enabled = true;
+        if (_collider != null) _collider.enabled = true;
     }
 }
