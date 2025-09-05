@@ -92,7 +92,6 @@ public class PlayerControl : MonoBehaviour
 
             if (deltaTime < _dubleClickTime)
             {
-                Debug.Log("Double Clicked" + _lastClickTime);
                 _agent.speed = _baseSpeed * _speedMultiplier;
                 _isRunning = true;
             }

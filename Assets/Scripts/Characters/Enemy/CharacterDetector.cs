@@ -17,6 +17,8 @@ public class CharacterDetector : MonoBehaviour
     public LayerMask ObstacleMask => _obstacleMask;
 
     public Transform EyePosition => _eyePosition;
+    public Transform Target => _target;
+
 
     private void Update()
     {
