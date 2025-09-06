@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3491482824034462271}
   - component: {fileID: 166198034353355838}
   - component: {fileID: 8382481023475209538}
+  - component: {fileID: 5223185833961227519}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -138,7 +139,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHealth: 3
   _invulnerabilityTime: 0.5
-  _currentHealth: 0
+--- !u!114 &5223185833961227519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621293207678907418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eebfb2d9d992ec04b8f692a8772d67c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speedSmoothTime: 0.1
+  _directionSmoothTime: 0.1
+  _movementThreshold: 0.1
 --- !u!1001 &3657826791322677643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -193,7 +208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 184b6e81f7bc8674492d9f154d4278e3, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 184b6e81f7bc8674492d9f154d4278e3, type: 3}
       propertyPath: m_Controller
@@ -201,13 +216,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: f96d160d4543e4c43b18b2fe7e406eb3, type: 2}
     - target: {fileID: 5866666021909216657, guid: 184b6e81f7bc8674492d9f154d4278e3, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-        'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-        'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-        'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-        more ...\n\tFrom animation clip 'Running'"
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
