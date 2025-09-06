@@ -13,11 +13,17 @@ public class FSMS_FollowPlayer : AbstractFSMState
     private float _lastPathSearchTime;
 
     private NavMeshAgent _agent;
+    private EnemyMemory _memory;
+    private EnemyFSMAnimationController _animator;
 
-    public void Awake()
+    public override void Setup(FSMController controller)
     {
-        _agent = GetComponentInParent<NavMeshAgent>();
+        base.Setup(controller);
+        _agent = controller.GetComponentInParent<NavMeshAgent>();
+        _memory = controller.GetComponentInParent<EnemyMemory>();
+        _animator = controller.GetComponentInParent<EnemyFSMAnimationController>();
     }
+
 
     public void UpdatePath()
     {
@@ -48,7 +54,10 @@ public class FSMS_FollowPlayer : AbstractFSMState
             return;
         }
 
+
         _agent.isStopped = false;
+        _animator?.SetState(ANIMSTATE.RUN);
+
         UpdatePath();
 
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,10 +14,18 @@ public class FSMS_FollowPath : AbstractFSMState
     private bool _movingForward = true;
     private NavMeshAgent _agent;
 
+    private EnemyFSMAnimationController _animator;
+
+    public override void Setup(FSMController controller)
+    {
+        base.Setup(controller);
+        _agent = controller.GetComponentInParent<NavMeshAgent>();
+        _animator = controller.GetComponentInParent<EnemyFSMAnimationController>();
+    }
+
     public override void StateEnter()
     {
-        if (_agent == null)
-            _agent = GetComponentInParent<NavMeshAgent>();
+
 
         if (_destinations.Length == 0)
         {
@@ -26,6 +35,7 @@ public class FSMS_FollowPath : AbstractFSMState
 
         _destinationIndex = GetClosestDestinationIndex();
 
+        _animator?.SetState(ANIMSTATE.WALK);
         _agent.isStopped = false;
         SetDestinationAtIndex(_destinationIndex);
     }

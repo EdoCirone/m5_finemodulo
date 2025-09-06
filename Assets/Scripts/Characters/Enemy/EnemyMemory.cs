@@ -6,6 +6,8 @@ public class EnemyMemory : MonoBehaviour
 {
     public Vector3? LastKnownPlayerPosition { get; set; }
     public Vector3? FirstSightPosition { get; set; }
+
+    public Quaternion? FirstSightRotation { get; set; }
     public float TimeLostPlayer { get; set; }
 
     public bool HasLastKnownPosition => LastKnownPlayerPosition.HasValue;
