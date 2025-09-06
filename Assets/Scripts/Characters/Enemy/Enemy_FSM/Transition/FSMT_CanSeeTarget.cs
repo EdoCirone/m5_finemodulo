@@ -6,29 +6,36 @@ public class FSMT_CanSeeTarget : AbstractFSMTransition
 {
 
     private CharacterDetector _detector;
+    private float _timeSinceLastSeen = 0f;
+
+    private void Awake()
+    {
+        _detector = GetComponentInParent<CharacterDetector>();
+    }
 
     public override bool IsConditionMet(FSMController controller, AbstractFSMState ownerState)
     {
-        if (_detector == null)
-        {
-            _detector = controller.GetComponent<CharacterDetector>();
-            if (_detector == null) return false;
-        }
+        if (_detector == null) return false;
 
         if (_detector.CanSeeTarget())
         {
-            var memory = controller.GetComponent<EnemyMemory>();
-            if (memory != null && _detector.Target != null)
+            _timeSinceLastSeen = 0f;
+
+            var memory = controller.GetComponentInParent<EnemyMemory>();
+            if (memory != null && !memory.FirstSightPosition.HasValue)
             {
-                memory.FirstSightPosition = controller.transform.position;
-                memory.LastKnownPlayerPosition = _detector.Target.position;
+                memory.FirstSightPosition = _detector.Target.position;
+                memory.FirstSightRotation = _detector.Target.rotation;
+                memory.EnemyPositionAtFirstSight = controller.transform.position;
+                memory.EnemyRotationAtFirstSight = controller.transform.rotation;
             }
 
             return true;
         }
-
-        return false;
+        else
+        {
+            _timeSinceLastSeen += Time.deltaTime;
+            return false;
+        }
     }
-
-
 }

@@ -6,18 +6,16 @@ using UnityEngine.AI;
 
 public class FSMS_Wait : AbstractFSMState
 {
-    private EnemyFSMAnimationController _animator;
     public override void Setup(FSMController controller)
     {
         base.Setup(controller);
         
-        _animator = controller.GetComponentInParent<EnemyFSMAnimationController>();
+       
     }
 
     public override void StateEnter()
     {
 
-        _animator?.SetState(ANIMSTATE.IDLE);
 
     }
 

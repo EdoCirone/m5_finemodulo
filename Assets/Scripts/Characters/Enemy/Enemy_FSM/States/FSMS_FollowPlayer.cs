@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -14,14 +14,12 @@ public class FSMS_FollowPlayer : AbstractFSMState
 
     private NavMeshAgent _agent;
     private EnemyMemory _memory;
-    private EnemyFSMAnimationController _animator;
 
     public override void Setup(FSMController controller)
     {
         base.Setup(controller);
         _agent = controller.GetComponentInParent<NavMeshAgent>();
         _memory = controller.GetComponentInParent<EnemyMemory>();
-        _animator = controller.GetComponentInParent<EnemyFSMAnimationController>();
     }
 
 
@@ -38,15 +36,7 @@ public class FSMS_FollowPlayer : AbstractFSMState
 
     public override void StateEnter()
     {
-        if (_target == null) Debug.LogWarning("FSMS_FollowPlayer: target NON assegnato!");
-
-
-        _controller.TryGetComponent<CharacterDetector>(out var detector);
-
-        if (detector != null && detector.Target != null)
-        {
-            SetTarget(detector.Target);
-        }
+        
 
         if (_agent == null)
         {
@@ -54,14 +44,20 @@ public class FSMS_FollowPlayer : AbstractFSMState
             return;
         }
 
+        _controller.TryGetComponent<CharacterDetector>(out var detector);
+
+        if (detector != null && detector.Target != null)
+        {
+            SetTarget(detector.Target);
+            UpdatePath(); 
+        }
+        else
+        {
+            Debug.LogWarning("FSMS_FollowPlayer: Nessun target trovato, niente path");
+            return;
+        }
 
         _agent.isStopped = false;
-        _animator?.SetState(ANIMSTATE.RUN);
-
-        UpdatePath();
-
-
-
     }
 
 

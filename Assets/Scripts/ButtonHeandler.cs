@@ -1,9 +1,11 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class ButtonHandler : MonoBehaviour, IAlarmed
 {
     [SerializeField] private Transform _doorTransform;
+    [SerializeField] private GameObject _uiPrompt;
 
     [SerializeField] private float _openOffsetY;
     [SerializeField] private float _openDuration = 0.4f;
@@ -31,6 +33,16 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
             if (_isOpen) CloseDoor();
             else OpenDoor();
         }
+
+        if (_playerInside && _uiPrompt != null)
+        {
+
+            TMP_Text tmpText = _uiPrompt.GetComponentInChildren<TMP_Text>();
+            if (tmpText != null)
+            {
+                tmpText.text = _isOpen ? "Premi [F] per chiudere" : "Premi [F] per aprire";
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -38,6 +50,7 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
         if (other.CompareTag("Player"))
         {
             _playerInside = true;
+            if (_uiPrompt != null) _uiPrompt.SetActive(true);
         }
     }
 
@@ -46,6 +59,7 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
         if (other.CompareTag("Player"))
         {
             _playerInside = false;
+            if (_uiPrompt != null) _uiPrompt.SetActive(false);
         }
     }
 

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -26,7 +26,7 @@ public class CharacterDetector : MonoBehaviour
         {
             Debug.Log("Target in sight!");
         }
-        else 
+        else
         {
             Debug.Log("Target not in sight!");
         }
@@ -48,22 +48,37 @@ public class CharacterDetector : MonoBehaviour
         {
             return false;
         }
-        
+
         float distanceToTarget = Mathf.Sqrt(sqrdistanceToTarget);
         toTarget /= distanceToTarget;
 
         if (Vector3.Dot(_eyePosition.forward, toTarget) < Mathf.Cos(_viewAngle * Mathf.Deg2Rad))
-            {
-                return false;
-            }
-        
-      
+        {
+            return false;
+        }
+
+
         if (Physics.Raycast(_eyePosition.position, toTarget + Vector3.up * 0.01f, distanceToTarget, _obstacleMask))
         {
             Debug.Log("Obstacle in the way!");
             return false;
         }
 
-            return true;
+        return true;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (_eyePosition == null) return;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(_eyePosition.position, _eyePosition.forward * _viewDistance);
+
+        Vector3 leftLimit = Quaternion.Euler(0, -_viewAngle, 0) * _eyePosition.forward;
+        Vector3 rightLimit = Quaternion.Euler(0, _viewAngle, 0) * _eyePosition.forward;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(_eyePosition.position, leftLimit * _viewDistance);
+        Gizmos.DrawRay(_eyePosition.position, rightLimit * _viewDistance);
     }
 }

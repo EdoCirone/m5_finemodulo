@@ -205,6 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
+  _graceTime: 1
 --- !u!1 &3837445563696376831
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,6 +278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
+  _graceTime: 1
 --- !u!1 &4395386017843668234
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,6 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
+  _graceTime: 1
 --- !u!1 &6025918122850622750
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,6 +406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
+  _graceTime: 1
 --- !u!114 &2719257427172147111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -693,6 +697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
+  _graceTime: 1
 --- !u!114 &7258300794782235473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1034,7 +1039,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 184b6e81f7bc8674492d9f154d4278e3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8700783698680967558, guid: 184b6e81f7bc8674492d9f154d4278e3, type: 3}

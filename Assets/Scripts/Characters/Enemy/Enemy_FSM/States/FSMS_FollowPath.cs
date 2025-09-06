@@ -14,13 +14,11 @@ public class FSMS_FollowPath : AbstractFSMState
     private bool _movingForward = true;
     private NavMeshAgent _agent;
 
-    private EnemyFSMAnimationController _animator;
 
     public override void Setup(FSMController controller)
     {
         base.Setup(controller);
         _agent = controller.GetComponentInParent<NavMeshAgent>();
-        _animator = controller.GetComponentInParent<EnemyFSMAnimationController>();
     }
 
     public override void StateEnter()
@@ -35,7 +33,6 @@ public class FSMS_FollowPath : AbstractFSMState
 
         _destinationIndex = GetClosestDestinationIndex();
 
-        _animator?.SetState(ANIMSTATE.WALK);
         _agent.isStopped = false;
         SetDestinationAtIndex(_destinationIndex);
     }
@@ -44,7 +41,7 @@ public class FSMS_FollowPath : AbstractFSMState
     {
         if (_destinations.Length == 0 || _agent == null) return;
 
-        if (IsCloseEnoughToDestination())
+        if (_agent.HasReachedDestination())
         {
             AdvancePath();
         }
@@ -129,10 +126,5 @@ public class FSMS_FollowPath : AbstractFSMState
     private void SetDestinationAtNextIndex() => SetDestinationAtIndex(_destinationIndex + 1);
     private void SetDestinationAtPreviousIndex() => SetDestinationAtIndex(_destinationIndex - 1);
 
-    private bool IsCloseEnoughToDestination()
-    {
-        return !_agent.pathPending &&
-               _agent.remainingDistance <= _agent.stoppingDistance &&
-               (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f);
-    }
+   
 }

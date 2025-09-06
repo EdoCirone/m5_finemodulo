@@ -2,65 +2,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class VisionConeLineRendererHandler : MonoBehaviour
 {
     [SerializeField] private int _subdivisions = 12;
 
-
     private LineRenderer _lineRenderer;
     private CharacterDetector _characterDetector;
+
     void Start()
     {
-
         _lineRenderer = GetComponent<LineRenderer>();
         _characterDetector = GetComponentInParent<CharacterDetector>();
-        EvalutateConeOfView(_subdivisions);
-
+        EvaluateConeOfView(_subdivisions);
     }
 
     void Update()
     {
-        EvalutateConeOfView(_subdivisions);
+        EvaluateConeOfView(_subdivisions);
     }
 
-    public void EvalutateConeOfView(int subdivisions)
+    public void EvaluateConeOfView(int subdivisions)
     {
-        Vector3 origin = _characterDetector.transform.position;
+        if (_characterDetector == null) return;
 
-        // Ottieni solo la rotazione Y dagli occhi
-        float eyeYaw = _characterDetector.EyePosition.eulerAngles.y;
-        Quaternion eyeYawRotation = Quaternion.Euler(0f, eyeYaw, 0f);
+        Vector3 origin = _characterDetector.EyePosition.position;
+        origin.y = 0f; 
 
         float viewAngle = _characterDetector.ViewAngle;
         float viewDistance = _characterDetector.ViewDistance;
-        float halfAngleRad = viewAngle * Mathf.Deg2Rad;
-        float deltaAngle = (halfAngleRad * 2f) / subdivisions;
+        float halfFOV = viewAngle * 0.5f;
+        float deltaAngle = viewAngle / (subdivisions - 1);
 
-        int points = subdivisions + 1;
-        _lineRenderer.positionCount = points;
 
-        Vector3[] positions = new Vector3[points];
-        Vector3 raycastOrigin = origin + Vector3.up * 0.5f; // un po' sollevato per evitare terreno
+        Vector3[] positions = new Vector3[subdivisions + 1];
 
         for (int i = 0; i < subdivisions; i++)
         {
-            float currentAngle = -halfAngleRad + i * deltaAngle;
-            Vector3 localDir = new Vector3(Mathf.Sin(currentAngle), 0f, Mathf.Cos(currentAngle));
-            Vector3 worldDir = eyeYawRotation * localDir;
+            float angle = -halfFOV + deltaAngle * i;
 
-            Vector3 point = origin + worldDir * viewDistance;
+            
+            Quaternion rot = Quaternion.AngleAxis(angle, Vector3.up) * _characterDetector.EyePosition.rotation;
+            Vector3 dir = rot * Vector3.forward;
+            dir.y = 0f; 
 
-            if (Physics.Raycast(raycastOrigin, worldDir, out RaycastHit hit, viewDistance, _characterDetector.ObstacleMask))
+            Vector3 point = origin + dir * viewDistance;
+
+            if (Physics.Raycast(origin, dir, out RaycastHit hit, viewDistance, _characterDetector.ObstacleMask))
             {
                 point = hit.point;
             }
 
+            point.y = origin.y; 
             positions[i] = point;
         }
 
-        positions[subdivisions] = origin; // chiudi il cono
+        
+        positions[subdivisions] = origin;
+
+        _lineRenderer.useWorldSpace = true;
+        _lineRenderer.loop = true; 
+
         _lineRenderer.SetPositions(positions);
     }
-
 
 }

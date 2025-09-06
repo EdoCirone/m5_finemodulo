@@ -11,4 +11,5 @@ public static class NavMeshAgentExtensions
                agent.remainingDistance <= agent.stoppingDistance &&
                (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
     }
+
 }

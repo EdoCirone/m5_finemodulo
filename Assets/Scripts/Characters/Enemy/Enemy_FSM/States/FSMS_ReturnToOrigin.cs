@@ -1,78 +1,65 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class FSMS_ReturnToOrigin : AbstractFSMState
 {
-    private EnemyFSMAnimationController _animator;
+    [SerializeField] private float _rotationSpeed = 180f;
+
     private NavMeshAgent _agent;
     private EnemyMemory _memory;
 
-    private bool _isRotating = true;
-    private const float _rotationSpeed = 180f; // gradi/sec
+    private bool _isRotate = false; //Mi serve per ruotare e poi muovermi
 
     public override void Setup(FSMController controller)
     {
         base.Setup(controller);
         _agent = controller.GetComponentInParent<NavMeshAgent>();
-        _animator = controller.GetComponentInParent<EnemyFSMAnimationController>();
         _memory = controller.GetComponentInParent<EnemyMemory>();
     }
 
     public override void StateEnter()
     {
-        if (_agent == null || _memory == null) return;
+        _isRotate = false;
 
-        _agent.isStopped = true; // blocca il movimento
-        _isRotating = true;
-
-        _animator?.SetState(ANIMSTATE.IDLE); // idle mentre ruota
+       
+        _agent.isStopped = true;
+        _agent.ResetPath();
+        _agent.updateRotation = false; // disabilito la rotazione del navmesh
+        Debug.Log("[FSMS_ReturnToOrigin] Entrato nello stato. Inizio rotazione.");
     }
 
     public override void StateUpdate()
     {
-        if (_agent == null || _memory == null) return;
+        if (_memory == null || !_memory.EnemyPositionAtFirstSight.HasValue)
+            return;
 
-        if (_isRotating)
+        if (!_isRotate)
         {
-            if (_memory.FirstSightRotation.HasValue)
+            Vector3 toDestination = _memory.EnemyPositionAtFirstSight.Value - _agent.transform.position;
+            toDestination.y = 0f;
+
+            if (toDestination.sqrMagnitude < 0.01f)
             {
-                Quaternion targetRotation = _memory.FirstSightRotation.Value;
-
-                transform.rotation = Quaternion.RotateTowards(
-                    transform.rotation,
-                    targetRotation,
-                    _rotationSpeed * Time.deltaTime
-                );
-
-                float angle = Quaternion.Angle(transform.rotation, targetRotation);
-                if (angle < 1f)
-                {
-                    // rotazione completata
-                    _isRotating = false;
-
-                    if (_memory.FirstSightPosition.HasValue)
-                    {
-                        _agent.SetDestination(_memory.FirstSightPosition.Value);
-                        _agent.isStopped = false;
-
-                        _animator?.SetState(ANIMSTATE.WALK);
-                    }
-                }
+                Debug.Log("Direzione troppo corta, ritorno.");
+                return;
             }
-        }
-        else
-        {
-            if (_agent.HasReachedDestination())
-            {
-                _agent.isStopped = true;
-                _animator?.SetState(ANIMSTATE.IDLE);
 
-                // Reset memoria
-                _memory.FirstSightPosition = null;
-                _memory.FirstSightRotation = null;
-                _memory.LastKnownPlayerPosition = null;
+            Quaternion desiredRotation = Quaternion.LookRotation(toDestination);
+            _agent.transform.rotation = Quaternion.RotateTowards(
+                _agent.transform.rotation,
+                desiredRotation,
+                _rotationSpeed * Time.deltaTime
+            );
+            float angle = Quaternion.Angle(_agent.transform.rotation, desiredRotation);
+            Debug.Log($"Angolo restante: {angle}");
+
+            if (angle < 1f)
+            {
+                _isRotate = true;
+                _agent.SetDestination(_memory.EnemyPositionAtFirstSight.Value);
+                _agent.isStopped = false;
+
+                Debug.Log("[FSMS_ReturnToOrigin] Rotazione completata. Inizio movimento.");
             }
         }
     }
@@ -81,7 +68,7 @@ public class FSMS_ReturnToOrigin : AbstractFSMState
     {
         if (_agent != null)
         {
-            _agent.ResetPath();
+            _agent.updateRotation = true; //Ripristina la rotazione del navMEsh
         }
     }
 
