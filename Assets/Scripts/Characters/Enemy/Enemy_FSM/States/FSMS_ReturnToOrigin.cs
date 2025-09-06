@@ -33,14 +33,14 @@ public class FSMS_ReturnToOrigin : AbstractFSMState
         if (_memory == null || !_memory.EnemyPositionAtFirstSight.HasValue)
             return;
 
-        if (!_isRotate)
+        if (!_isRotate) //Se non è ruotato lo ruoto prima di iniziare il movimeto
         {
             Vector3 toDestination = _memory.EnemyPositionAtFirstSight.Value - _agent.transform.position;
             toDestination.y = 0f;
 
             if (toDestination.sqrMagnitude < 0.01f)
             {
-                Debug.Log("Direzione troppo corta, ritorno.");
+                //Debug.Log("Direzione troppo corta, ritorno.");
                 return;
             }
 
@@ -50,8 +50,9 @@ public class FSMS_ReturnToOrigin : AbstractFSMState
                 desiredRotation,
                 _rotationSpeed * Time.deltaTime
             );
+
             float angle = Quaternion.Angle(_agent.transform.rotation, desiredRotation);
-            Debug.Log($"Angolo restante: {angle}");
+            //Debug.Log($"Angolo restante: {angle}");
 
             if (angle < 1f)
             {
@@ -59,7 +60,7 @@ public class FSMS_ReturnToOrigin : AbstractFSMState
                 _agent.SetDestination(_memory.EnemyPositionAtFirstSight.Value);
                 _agent.isStopped = false;
 
-                Debug.Log("[FSMS_ReturnToOrigin] Rotazione completata. Inizio movimento.");
+                //Debug.Log("[FSMS_ReturnToOrigin] Rotazione completata. Inizio movimento.");
             }
         }
     }

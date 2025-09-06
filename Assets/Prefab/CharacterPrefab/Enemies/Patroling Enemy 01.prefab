@@ -191,7 +191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 812862925770524290}
-  _detector: {fileID: 2860471307288941660}
 --- !u!114 &3029834133804679103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,7 +204,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
-  _graceTime: 1
 --- !u!1 &3837445563696376831
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,7 +276,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
-  _graceTime: 1
 --- !u!1 &4395386017843668234
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +343,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
-  _graceTime: 1
 --- !u!1 &6025918122850622750
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +402,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
-  _graceTime: 1
 --- !u!114 &2719257427172147111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,7 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 8911581953320678551}
-  _duration: 3
+  _duration: 7
 --- !u!1 &6628794155645777910
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,6 +679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 811f6544bb6e6ed4e98134d27c768981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotationSpeed: 360
 --- !u!114 &890309753642394094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -697,7 +693,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2204716973179959385}
-  _graceTime: 1
 --- !u!114 &7258300794782235473
 MonoBehaviour:
   m_ObjectHideFlags: 0

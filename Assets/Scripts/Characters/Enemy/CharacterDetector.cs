@@ -52,6 +52,14 @@ public class CharacterDetector : MonoBehaviour
         float distanceToTarget = Mathf.Sqrt(sqrdistanceToTarget);
         toTarget /= distanceToTarget;
 
+        float closeRangeThreshold = 1.5f; // provo a dargli un pò di margine per evitare che passandogli velocemente davanti non mi vede
+
+
+        if (distanceToTarget < closeRangeThreshold)
+        {
+            return !Physics.Raycast(_eyePosition.position, toTarget, distanceToTarget, _obstacleMask);
+        }
+
         if (Vector3.Dot(_eyePosition.forward, toTarget) < Mathf.Cos(_viewAngle * Mathf.Deg2Rad))
         {
             return false;
