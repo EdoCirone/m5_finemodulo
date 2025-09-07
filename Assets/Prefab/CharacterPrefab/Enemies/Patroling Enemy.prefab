@@ -445,7 +445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 8911581953320678551}
-  _duration: 7
+  _duration: 1
 --- !u!1 &6574381894728846449
 GameObject:
   m_ObjectHideFlags: 0

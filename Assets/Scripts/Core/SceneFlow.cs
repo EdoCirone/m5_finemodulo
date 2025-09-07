@@ -6,37 +6,24 @@ public class SceneFlow : MonoBehaviour
 {
     public static SceneFlow Instance { get; private set; }
 
-    [Header("Config")]
+    [Header("Config base")]
     [SerializeField] private string _mainMenuScene = "MainMenu";
     [SerializeField] private bool _restartOnAnyHit = true;
-    [SerializeField] private float _restartDelay = 0.2f; 
-    [SerializeField] private float _menuDelay = 0.2f;
+    [SerializeField] private float _delay = 0.2f;
 
-    private bool _isLoading;
-    private Coroutine _loadingCo; // traccia l’operazione in corso
+    private bool _busy;
 
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
+     
     }
-
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene s, LoadSceneMode m)
-    {
-        var plc = FindObjectOfType<PlayerLifeControl>();
-        if (plc != null) RegisterPlayer(plc);
-    }
-
     public void RegisterPlayer(PlayerLifeControl plc)
     {
+        if (plc == null) return;
+
+        // pulizia/ri-subscribe idempotente
         plc.Damaged -= OnPlayerDamaged;
         plc.Died -= OnPlayerDied;
 
@@ -44,81 +31,77 @@ public class SceneFlow : MonoBehaviour
         plc.Died += OnPlayerDied;
     }
 
+    public void LevelCompleted()
+    {
+        if (_busy) return;
+        LoadNextOrMenuAfter(_delay);
+    }
+
     private void OnPlayerDamaged(int current, int max)
     {
-        if (!_restartOnAnyHit) return;
-        if (_isLoading || _loadingCo != null) return;
-
-        _loadingCo = StartCoroutine(RestartLevelAfterDelay(_restartDelay));
+        if (!_restartOnAnyHit || _busy) return;
+        RestartCurrentAfter(_delay);
     }
 
     private void OnPlayerDied()
     {
-        // Priorità alla morte: cancella eventuale restart già schedulato
-        if (_loadingCo != null)
-        {
-            StopCoroutine(_loadingCo);
-            _loadingCo = null;
-            _isLoading = false;
-        }
-
-        // Reset pv per la prossima scena
+        if (_busy) return;
         PlayerLifeControl.ResetHealthToMax();
-
-        if (SceneExistsInBuild(_mainMenuScene))
-            _loadingCo = StartCoroutine(LoadSceneAfterDelay(_mainMenuScene, _menuDelay));
-        else
-            _loadingCo = StartCoroutine(RestartLevelAfterDelay(_menuDelay));
+        LoadMainMenuOrRestartAfter(_delay);
     }
 
-    public void LevelCompleted()
+    private void RestartCurrentAfter(float d)
     {
-        if (_isLoading || _loadingCo != null) return;
-
-        if (SceneExistsInBuild(_mainMenuScene))
-            _loadingCo = StartCoroutine(LoadSceneAfterDelay(_mainMenuScene, _menuDelay));
-        else
-            _loadingCo = StartCoroutine(LoadNextBuildIndex());
-    }
-
-    private IEnumerator RestartLevelAfterDelay(float delay)
-    {
-        _isLoading = true;
-        yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        _isLoading = false;
-        _loadingCo = null;
-    }
-
-    private IEnumerator LoadSceneAfterDelay(string sceneName, float delay)
-    {
-        _isLoading = true;
-        yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(sceneName);
-        _isLoading = false;
-        _loadingCo = null;
-    }
-
-    private IEnumerator LoadNextBuildIndex()
-    {
-        _isLoading = true;
-        int idx = SceneManager.GetActiveScene().buildIndex;
-        int next = (idx + 1) % SceneManager.sceneCountInBuildSettings;
-        yield return null;
-        SceneManager.LoadScene(next);
-        _isLoading = false;
-        _loadingCo = null;
-    }
-
-    private bool SceneExistsInBuild(string sceneName)
-    {
-        int count = SceneManager.sceneCountInBuildSettings;
-        for (int i = 0; i < count; i++)
+        StartCoroutine(WaitThen(d, () =>
         {
-            string path = SceneUtility.GetScenePathByBuildIndex(i);
-            string name = System.IO.Path.GetFileNameWithoutExtension(path);
-            if (name == sceneName) return true;
-        }
-        return false;
+            _busy = true;
+            Time.timeScale = 1f;
+            var cur = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(cur.buildIndex);
+            _busy = false;
+        }));
+    }
+
+    private void LoadMainMenuOrRestartAfter(float d)
+    {
+        StartCoroutine(WaitThen(d, () =>
+        {
+            _busy = true;
+            Time.timeScale = 1f;
+
+            if (Application.CanStreamedLevelBeLoaded(_mainMenuScene))
+                SceneManager.LoadScene(_mainMenuScene);
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            _busy = false;
+        }));
+    }
+
+    private void LoadNextOrMenuAfter(float d)
+    {
+        StartCoroutine(WaitThen(d, () =>
+        {
+            _busy = true;
+            Time.timeScale = 1f;
+
+            int cur = SceneManager.GetActiveScene().buildIndex;
+            int next = cur + 1;
+
+            if (next < SceneManager.sceneCountInBuildSettings)
+                SceneManager.LoadScene(next);
+            else if (Application.CanStreamedLevelBeLoaded(_mainMenuScene))
+                SceneManager.LoadScene(_mainMenuScene);
+            else
+                SceneManager.LoadScene(cur); // fallback
+
+            _busy = false;
+        }));
+    }
+
+    private IEnumerator WaitThen(float seconds, System.Action action)
+    {
+        yield return new WaitForSeconds(seconds);
+        action?.Invoke();
     }
 }

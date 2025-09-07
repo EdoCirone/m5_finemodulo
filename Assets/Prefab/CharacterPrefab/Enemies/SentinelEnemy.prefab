@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 7107105466525775640}
-  _duration: 2
+  _duration: 1
 --- !u!114 &1789631192243805873
 MonoBehaviour:
   m_ObjectHideFlags: 0

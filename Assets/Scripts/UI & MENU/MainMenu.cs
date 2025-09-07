@@ -10,6 +10,11 @@ public class MainMenuUI : MonoBehaviour
         SceneManager.LoadScene("Level1"); // Assicurati che la scena si chiami così
     }
 
+    public void ComandInfoMenu()
+    {
+        SceneManager.LoadScene("ComandiInfoMenu"); // Assicurati che la scena si chiami così
+    }
+
     public void ExitGame()
     {
         Debug.Log("Hai premuto Exit Game (placeholder)");
