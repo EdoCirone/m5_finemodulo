@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5533999122688038476}
   - component: {fileID: 4968779099227735429}
   - component: {fileID: 8144790445601273114}
-  - component: {fileID: 83406641655990955}
+  - component: {fileID: 3524371120517763131}
   m_Layer: 10
   m_Name: LockerButton
   m_TagString: Untagged
@@ -109,7 +109,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &83406641655990955
+--- !u!114 &3524371120517763131
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,8 +122,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _doorTransform: {fileID: 0}
-  _uiPrompt: {fileID: 3899952576020317396}
-  _openOffsetY: -4
+  _uiPrompt: {fileID: 0}
+  _openOffsetY: -2
   _openDuration: 0.4
 --- !u!1 &3899952576020317396
 GameObject:

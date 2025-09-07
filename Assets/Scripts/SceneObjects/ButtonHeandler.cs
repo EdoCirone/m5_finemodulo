@@ -2,7 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class ButtonHandler : MonoBehaviour, IAlarmed
+public class ButtonHandler : MonoBehaviour
 {
     [SerializeField] private Transform _doorTransform;
     [SerializeField] private GameObject _uiPrompt;
@@ -96,15 +96,4 @@ public class ButtonHandler : MonoBehaviour, IAlarmed
         _moveCo = null;
     }
 
-    // ---- IAlarmed ----
-    public void OnAlarmRaised()
-    {
-        CloseDoor();
-        if (_collider != null) _collider.enabled = false;
-    }
-
-    public void OnAlarmLowered()
-    {
-        if (_collider != null) _collider.enabled = true;
-    }
 }

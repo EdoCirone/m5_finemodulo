@@ -23,7 +23,7 @@ public abstract class AbstractFSMState : MonoBehaviour
         _transitions = GetComponents<AbstractFSMTransition>();
     }
 
-    public AbstractFSMState EvalutateTransitions()
+    public AbstractFSMState EvaluateTransitions()
     {
         foreach (AbstractFSMTransition transition in _transitions)
         {

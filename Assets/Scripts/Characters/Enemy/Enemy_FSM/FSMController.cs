@@ -20,7 +20,7 @@ public class FSMController : MonoBehaviour
         if (availableStates.Length == 0)
         {
 
-            Debug.LogError($"The FSMController of {gameObject.name} has no AbstractFSMStates as Children", gameObject);
+            Debug.LogError($"Mancano gli stati della FSM", gameObject);
 
         }
 
@@ -52,7 +52,7 @@ public class FSMController : MonoBehaviour
 
             _currentState.StateUpdate();
 
-            AbstractFSMState targetState = _currentState.EvalutateTransitions();
+            AbstractFSMState targetState = _currentState.EvaluateTransitions();
 
             if (targetState != null) { SetState(targetState); }
         }

@@ -6,7 +6,6 @@ public class FSMT_CanSeeTarget : AbstractFSMTransition
 {
 
     private CharacterDetector _detector;
-    private float _timeSinceLastSeen = 0f;
 
     private void Awake()
     {
@@ -19,7 +18,7 @@ public class FSMT_CanSeeTarget : AbstractFSMTransition
 
         if (_detector.CanSeeTarget())
         {
-            _timeSinceLastSeen = 0f;
+  
 
             var memory = controller.GetComponentInParent<EnemyMemory>();
             if (memory != null && !memory.FirstSightPosition.HasValue)
@@ -34,7 +33,7 @@ public class FSMT_CanSeeTarget : AbstractFSMTransition
         }
         else
         {
-            _timeSinceLastSeen += Time.deltaTime;
+
             return false;
         }
     }

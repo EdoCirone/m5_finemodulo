@@ -6,31 +6,16 @@ using UnityEngine.AI;
 
 public class FSMS_Wait : AbstractFSMState
 {
-    public override void Setup(FSMController controller)
-    {
-        base.Setup(controller);
-        
-       
-    }
 
-    public override void StateEnter()
-    {
+    public override void StateEnter() { }
 
 
-    }
+    public override void StateExit() { }
 
-    public override void StateExit()
-    {
-        
-    }
 
-    public override void StateFixedUpdate()
-    {
-       
-    }
+    public override void StateFixedUpdate() { }
 
-    public override void StateUpdate()
-    {
-      
-    }
+
+    public override void StateUpdate() { }
+
 }
