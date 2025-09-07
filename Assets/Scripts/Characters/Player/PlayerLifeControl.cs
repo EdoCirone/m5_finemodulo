@@ -12,14 +12,17 @@ public class PlayerLifeControl : MonoBehaviour
 
     private bool _invulnerable;
 
-    public int MaxHealth => _maxHealth;                 
-    public static int StaticMaxHealth => s_maxHealth;  
+
     public event Action<int, int> Damaged;
     public event Action Died;
 
+    public int MaxHealth => _maxHealth;                 
+   
+    public static int StaticCurrentHealth => s_currentHealth;
+
     private void Start()
     {
-        // Inizializza una sola volta
+
         if (s_currentHealth < 0) s_currentHealth = _maxHealth;
         if (s_maxHealth < 0) s_maxHealth = _maxHealth;
 

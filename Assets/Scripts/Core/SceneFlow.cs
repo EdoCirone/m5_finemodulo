@@ -6,7 +6,6 @@ public class SceneFlow : MonoBehaviour
 {
     public static SceneFlow Instance { get; private set; }
 
-    [Header("Config base")]
     [SerializeField] private string _mainMenuScene = "MainMenu";
     [SerializeField] private bool _restartOnAnyHit = true;
     [SerializeField] private float _delay = 0.2f;
@@ -19,16 +18,16 @@ public class SceneFlow : MonoBehaviour
         Instance = this;
      
     }
-    public void RegisterPlayer(PlayerLifeControl plc)
+    public void RegisterPlayer(PlayerLifeControl lifeControl)
     {
-        if (plc == null) return;
+        if (lifeControl == null) return;
 
         // pulizia/ri-subscribe idempotente
-        plc.Damaged -= OnPlayerDamaged;
-        plc.Died -= OnPlayerDied;
+        lifeControl.Damaged -= OnPlayerDamaged;
+        lifeControl.Died -= OnPlayerDied;
 
-        plc.Damaged += OnPlayerDamaged;
-        plc.Died += OnPlayerDied;
+        lifeControl.Damaged += OnPlayerDamaged;
+        lifeControl .Died += OnPlayerDied;
     }
 
     public void LevelCompleted()
